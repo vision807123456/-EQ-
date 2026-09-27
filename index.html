@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>EQ 情商测试</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#17181c;--muted:#777b86;--accent:#111827;--line:#e8eaf0;--soft:#f1f3f7;--good:#0f766e}
+*{box-sizing:border-box}html,body{margin:0;padding:0;background:linear-gradient(180deg,#fafafa 0%,#f3f5f9 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",Arial,sans-serif}
+body{min-height:100vh}.wrap{max-width:520px;margin:0 auto;padding:22px 16px 40px}.hero{padding:18px 4px 18px}.eyebrow{font-size:12px;letter-spacing:.18em;color:#9095a1;text-transform:uppercase}.hero h1{margin:8px 0 6px;font-size:30px;line-height:1.15}.hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.7}.card{background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:22px;box-shadow:0 10px 30px rgba(18,24,40,.06);padding:18px}.progressRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}.progressText{font-size:13px;color:var(--muted)}.bar{height:8px;background:#eceff4;border-radius:999px;overflow:hidden;flex:1}.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#111827,#475569);border-radius:999px;transition:width .25s ease}.group{font-size:12px;color:#8a8f9a;margin:8px 0 10px}.qnum{font-size:13px;color:#9a9fab;margin-bottom:6px}.question{font-size:21px;line-height:1.45;font-weight:650;margin-bottom:16px}.options{display:grid;gap:10px}.opt{border:1px solid var(--line);background:#fff;border-radius:16px;padding:14px 14px;display:flex;align-items:flex-start;gap:12px;font-size:16px;line-height:1.5;cursor:pointer;transition:.15s}.opt:active{transform:scale(.995)}.opt.selected{border-color:#111827;background:#f7f8fa}.badge{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:13px;font-weight:700}.opt.selected .badge{background:#111827;color:#fff}.nav{display:grid;grid-template-columns:1fr 1.5fr;gap:10px;margin-top:16px}.btn{border:0;border-radius:16px;padding:14px 16px;font-size:16px;font-weight:650;cursor:pointer}.btn.secondary{background:#eef1f5;color:#303540}.btn.primary{background:#111827;color:#fff}.btn:disabled{opacity:.42;cursor:not-allowed}.intro,.result{display:none}.intro.active,.quiz.active,.result.active{display:block}.intro .meta{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}.meta div{background:#f5f6f8;border-radius:14px;padding:12px 8px;text-align:center}.meta b{display:block;font-size:18px}.meta span{font-size:11px;color:var(--muted)}.tips{font-size:13px;line-height:1.7;color:var(--muted);padding:12px 0}.start{width:100%;margin-top:6px}.resultScore{text-align:center;padding:8px 0 18px}.score{font-size:64px;line-height:1;font-weight:800;letter-spacing:-.04em}.scoreLabel{color:var(--muted);font-size:13px;margin-top:8px}.resultTitle{font-size:22px;font-weight:750;margin:4px 0 10px}.resultDesc{font-size:15px;line-height:1.8;color:#444b57}.breakdown{display:grid;gap:8px;margin:16px 0}.row{display:flex;justify-content:space-between;background:#f6f7f9;border-radius:12px;padding:11px 12px;font-size:13px}.restart{width:100%;margin-top:4px}.foot{text-align:center;color:#a0a4ad;font-size:11px;line-height:1.6;padding:18px 8px 0}
+@media (max-width:360px){.question{font-size:19px}.hero h1{font-size:27px}.wrap{padding-left:12px;padding-right:12px}.card{padding:15px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Emotional Intelligence</div>
+    <h1>EQ 情商测试</h1>
+    <p>共 33 题。请尽量按照真实状态作答，提交后自动计算总分并显示对应结果。</p>
+  </section>
+
+  <section id="intro" class="card intro active">
+    <div class="question">准备好了解自己的 EQ 状态了吗？</div>
+    <div class="meta"><div><b>33</b><span>测试题</span></div><div><b>174</b><span>最高分</span></div><div><b>≈25</b><span>建议分钟</span></div></div>
+    <div class="tips">建议一次完成。没有“标准答案”，请选择与你当前真实状态最接近的选项。</div>
+    <button class="btn primary start" onclick="startQuiz()">开始测试</button>
+  </section>
+
+  <section id="quiz" class="card quiz">
+    <div class="progressRow"><div class="bar"><i id="bar"></i></div><div class="progressText" id="progressText">1 / 33</div></div>
+    <div class="group" id="group"></div>
+    <div class="qnum" id="qnum"></div>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="nav">
+      <button class="btn secondary" id="prevBtn" onclick="prevQ()">上一题</button>
+      <button class="btn primary" id="nextBtn" onclick="nextQ()" disabled>下一题</button>
+    </div>
+  </section>
+
+  <section id="result" class="card result">
+    <div class="resultScore"><div class="score" id="score">0</div><div class="scoreLabel">EQ 测试总分</div></div>
+    <div class="resultTitle" id="resultTitle"></div>
+    <div class="resultDesc" id="resultDesc"></div>
+    <div class="breakdown" id="breakdown"></div>
+    <button class="btn primary restart" onclick="restartQuiz()">重新测试</button>
+  </section>
+  <div class="foot">本页根据你提供的测试资料制作，仅用于自我了解与娱乐参考。</div>
+</div>
+<script>
+const questions = [
+{t:'我有能力克服各种困难：',o:['是的','不一定','不是的']},
+{t:'如果我能到一个新的环境，我要把生活安排得：',o:['和从前相仿','不一定','和从前不一样']},
+{t:'一生中，我觉得自己能达到我所预想的目标：',o:['是的','不一定','不是的']},
+{t:'不知为什么，有些人总是回避或冷淡我：',o:['不是的','不一定','是的']},
+{t:'在大街上，我常常避开我不愿打招呼的人：',o:['从未如此','偶尔如此','有时如此']},
+{t:'当我集中精力工作时，假使有人在旁边高谈阔论：',o:['我仍能专心工作','介于 A、C 之间','我不能专心且感到愤怒']},
+{t:'我不论到什么地方，都能清楚地辨别方向：',o:['是的','不一定','不是的']},
+{t:'我热爱所学的专业和所从事的工作：',o:['是的','不一定','不是的']},
+{t:'气候的变化不会影响我的情绪：',o:['是的','介于 A、C 之间','不是的']},
+{t:'我从不因流言蜚语而生气：',o:['是的','介于 A、C 之间','不是的']},
+{t:'我善于控制自己的面部表情：',o:['是的','不太确定','不是的']},
+{t:'在就寝时，我常常：',o:['极易入睡','介于 A、C 之间','不易入睡']},
+{t:'有人侵扰我时，我：',o:['不露声色','介于 A、C 之间','大声抗议，以泄己愤']},
+{t:'在和人争辩或工作出现失误后，我常常感到震颤、精疲力竭，而不能继续安心工作：',o:['不是的','介于 A、C 之间','是的']},
+{t:'我常常被一些无谓的小事困扰：',o:['不是的','介于 A、C 之间','是的']},
+{t:'我宁愿住在僻静的郊区，也不愿住在嘈杂的市区：',o:['不是的','不太确定','是的']},
+{t:'我被朋友、同事起过绰号、挖苦过：',o:['从来没有','偶尔有过','这是常有的事']},
+{t:'有一种食物使我吃后呕吐：',o:['没有','记不清','有']},
+{t:'除去看见的世界外，我的心中没有另外的世界：',o:['没有','记不清','有']},
+{t:'我会想到若干年后有什么使自己极为不安的事：',o:['从来没有想过','偶尔想到过','经常想到']},
+{t:'我常常觉得自己的家庭对自己不好，但是我又确切地知道他们的确对我好：',o:['否','说不清楚','是']},
+{t:'每天我一回家就立刻把门关上：',o:['否','不清楚','是']},
+{t:'我坐在小房间里把门关上，但我仍觉得心里不安：',o:['否','偶尔是','是']},
+{t:'当一件事需要我作决定时，我常觉得很难：',o:['否','偶尔是','是']},
+{t:'我常常用抛硬币、翻纸、抽签之类的游戏来预测凶吉：',o:['否','偶尔是','是']},
+{t:'为了工作我早出晚归，早晨起床我常常感到疲惫不堪：',o:['是','否']},
+{t:'在某种心境下，我会因为困惑陷入空想，将工作搁置下来：',o:['是','否']},
+{t:'我的神经脆弱，稍有刺激就会使我战栗：',o:['是','否']},
+{t:'睡梦中，我常常被噩梦惊醒：',o:['是','否']},
+{t:'工作中我愿意挑战艰巨的任务。',o:['从不','几乎不','一半时间','大多数时间','总是']},
+{t:'我常发现别人好的意愿。',o:['从不','几乎不','一半时间','大多数时间','总是']},
+{t:'能听取不同的意见，包括对自己的批评。',o:['从不','几乎不','一半时间','大多数时间','总是']},
+{t:'我时常勉励自己，对未来充满希望。',o:['从不','几乎不','一半时间','大多数时间','总是']}
+];
+let idx=0; const answers=Array(questions.length).fill(null);
+function startQuiz(){document.getElementById('intro').classList.remove('active');document.getElementById('quiz').classList.add('active');render()}
+function groupName(i){if(i<9)return '第 1–9 题 · 请选择最切合的答案';if(i<16)return '第 10–16 题 · 请如实作答';if(i<25)return '第 17–25 题 · 请选择最切合的答案';if(i<29)return '第 26–29 题 · 请选择“是 / 否”';return '第 30–33 题 · 请选择最符合的频率'}
+function render(){
+ const q=questions[idx];document.getElementById('progressText').textContent=`${idx+1} / ${questions.length}`;document.getElementById('bar').style.width=`${((idx+1)/questions.length)*100}%`;
+ document.getElementById('group').textContent=groupName(idx);document.getElementById('qnum').textContent=`第 ${idx+1} 题`;document.getElementById('question').textContent=q.t;
+ const box=document.getElementById('options');box.innerHTML='';
+ q.o.forEach((txt,i)=>{const d=document.createElement('div');d.className='opt'+(answers[idx]===i?' selected':'');const label=i<3?String.fromCharCode(65+i):(i+1);d.innerHTML=`<span class="badge">${label}</span><span>${txt}</span>`;d.onclick=()=>{answers[idx]=i;render()};box.appendChild(d)});
+ document.getElementById('prevBtn').disabled=idx===0;const next=document.getElementById('nextBtn');next.disabled=answers[idx]===null;next.textContent=idx===questions.length-1?'提交并查看结果':'下一题';
+}
+function nextQ(){if(answers[idx]===null)return;if(idx<questions.length-1){idx++;render();window.scrollTo({top:0,behavior:'smooth'})}else finish()}
+function prevQ(){if(idx>0){idx--;render();window.scrollTo({top:0,behavior:'smooth'})}}
+function scoreFor(i,a){if(i<9)return [6,3,0][a];if(i<16)return [5,2,0][a];if(i<25)return [5,2,0][a];if(i<29)return a===0?0:5;return a+1}
+function finish(){
+ const sectionScores=[0,0,0,0,0];let total=0;answers.forEach((a,i)=>{const s=scoreFor(i,a);total+=s;if(i<9)sectionScores[0]+=s;else if(i<16)sectionScores[1]+=s;else if(i<25)sectionScores[2]+=s;else if(i<29)sectionScores[3]+=s;else sectionScores[4]+=s});
+ let title='',desc='';
+ if(total<90){title='EQ 得分较低';desc='资料中的评估认为，这一分数段的人更容易受情绪影响，也可能更容易急躁。建议在遇到刺激时先保持冷静，尝试用更积极、合理的方式解释和处理问题。'}
+ else if(total<=129){title='EQ 一般';desc='资料中的评估认为，你在不同情境下的表现可能并不完全一致，已经具有一定的 EQ 意识，但需要更经常地提醒自己留意情绪和行为。'}
+ else if(total<=149){title='EQ 较高';desc='资料中的评估认为，你通常较少恐惧和担忧，对工作较投入，也较愿意承担责任，并具有较强的同情与关怀倾向。'}
+ else {title='EQ 较高水平';desc='资料中的评估将 150 分以上归入较高 EQ 水平，并认为情绪智慧可能成为事业与生活中的积极条件。'}
+ document.getElementById('quiz').classList.remove('active');document.getElementById('result').classList.add('active');document.getElementById('score').textContent=total;document.getElementById('resultTitle').textContent=title;document.getElementById('resultDesc').textContent=desc;
+ const names=['1–9题','10–16题','17–25题','26–29题','30–33题'];document.getElementById('breakdown').innerHTML=names.map((n,i)=>`<div class="row"><span>${n}</span><b>${sectionScores[i]} 分</b></div>`).join('');window.scrollTo({top:0,behavior:'smooth'})
+}
+function restartQuiz(){for(let i=0;i<answers.length;i++)answers[i]=null;idx=0;document.getElementById('result').classList.remove('active');document.getElementById('intro').classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+</script>
+</body>
+</html>
